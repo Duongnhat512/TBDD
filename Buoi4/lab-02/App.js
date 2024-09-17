@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from './src/Login';
 import PassGenerator from './src/PassGenerator';
+import Tiki from './src/Tiki';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,13 @@ function HomeScreen({ navigation }) {
       >
         <Text>Password Generator</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Tiki');
+        }}
+      >
+        <Text>TIKI</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -37,6 +45,7 @@ function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Password Generator" component={PassGenerator} />
+        <Stack.Screen name="Tiki" component={Tiki} />
       </Stack.Navigator>
     </NavigationContainer>
   );
