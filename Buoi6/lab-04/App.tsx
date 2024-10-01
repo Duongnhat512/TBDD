@@ -2,6 +2,10 @@ import { StatusBar } from 'react-native';
 import { StyleSheet, Text, View, FlatList, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { ImageSourcePropType } from 'react-native';
 import Screen2 from './4_b.tsx';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 const DATA = [
   {
@@ -55,58 +59,74 @@ type ItemProps = {
   image: ImageSourcePropType,
 }
 
-export default function App() {
-  const renderItem = ({ item }: { item: ItemProps }) => {
-    return (
-      <View style={styles.item}>
-        <Image
-          source={item.image}
-        />
-        <View style={{ width: "50%" }}>
-          <Text>{item.title}</Text>
-          <Text style={{ color: "red" }}>{item.shopName}</Text>
-        </View>
-        <TouchableOpacity style={styles.btn}>
-          <Text style={{ color: "#fff" }}>Chat</Text>
+const renderItem = ({ item }: { item: ItemProps }) => {
+  return (
+    <View style={styles.item}>
+      <Image
+        source={item.image}
+      />
+      <View style={{ width: "50%" }}>
+        <Text>{item.title}</Text>
+        <Text style={{ color: "red" }}>{item.shopName}</Text>
+      </View>
+      <TouchableOpacity style={styles.btn}>
+        <Text style={{ color: "#fff" }}>Chat</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const Screen1 = ({ navigation }) => {
+  return(
+    <View style={styles.container}>
+      <View
+        style={styles.header}
+      >
+        <TouchableOpacity
+        >
+          <Image
+            source={require('./assets/arrow-left.png')}
+          />
+        </TouchableOpacity>
+
+        <Text>Chat</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Screen2')}
+        >
+          <Image
+            source={require('./assets/cart.png')}
+          />
         </TouchableOpacity>
       </View>
-    );
-  }
+      <View>
+        <Text style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>Bạn có thắc mắc gì với sản phẩm vừa xem. Đừng ngại chat với shop!</Text>
+      </View>
+      <FlatList
+        data={DATA}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        horizontal={false}
+      />
+      <View
+        style={styles.footer}
+      />
+    </View>
+  )
+}
 
+export default function App() {
   return (
-    // <SafeAreaView style={styles.container}>
-    //   <View
-    //     style={styles.header}
-    //   >
-    //     <TouchableOpacity>
-    //       <Image
-    //         source={require('./assets/arrow-left.png')}
-    //       />
-    //     </TouchableOpacity>
-
-    //     <Text>Chat</Text>
-    //     <TouchableOpacity>
-    //       <Image
-    //         source={require('./assets/cart.png')}
-    //       />
-    //     </TouchableOpacity>
-    //   </View>
-    //   <View>
-    //     <Text style={{ padding: 20, borderBottomWidth: 1, borderBottomColor: "#ccc" }}>Bạn có thắc mắc gì với sản phẩm vừa xem. Đừng ngại chat với shop!</Text>
-    //   </View>
-    //   <FlatList
-    //     data={DATA}
-    //     renderItem={renderItem}
-    //     keyExtractor={item => item.id}
-    //     horizontal={false}
-    //   />
-    //   <View
-    //     style={styles.footer}
-    //   />
-    // </SafeAreaView>
-    <SafeAreaView style={styles.container}>
-      <Screen2 />
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='Screen1'
+        screenOptions={{
+          headerShown: false
+        }}
+      >
+        <Stack.Screen name="Screen1" component={Screen1} />
+        <Stack.Screen name="Screen2" component={Screen2} />
+      </Stack.Navigator>
+    </NavigationContainer>
+    
   );
 }
 
