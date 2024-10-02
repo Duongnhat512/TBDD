@@ -32,7 +32,7 @@ export default function App() {
   }
   const editData = async (id, newTodo) => {
     const data = { todo: newTodo }
-    const response = await axios.put(`${url}/todos/${id}`, { data })
+    const response = await axios.put(`${url}/todos/${id}`, data )
     console.log(response.status);
     if (response.status === 200 || response.status === 201) {
       fetchAllData();
@@ -63,7 +63,7 @@ export default function App() {
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.btn, { backgroundColor: "#e5e7eb" }]}
-        onPress={() => editData(1, "Edit todo")}
+        onPress={() => editData(7, "Edit todo")}
       >
         <Text
           style={[styles.btnText, { color: "black" }]}
