@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Touchable } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useState } from 'react';
 
@@ -8,7 +8,8 @@ const Stack = createStackNavigator();
 
 const color = "blue";
 
-function ItemScreen({ navigation }) {
+function ItemScreen({ navigation, route }) {
+  // const { color } = route.params;
   return (
     <View style={styles.container}>
       <View style={{ flex: 5 }}>
@@ -113,6 +114,8 @@ function ItemColorPicker() {
     style: 'currency',
     currency: 'VND',
   }).format(price);
+
+  const navigation = useNavigation();
 
   const [colorSrc, setColorSrc] = useState(require('./assets/vs_blue.png'));
 
@@ -219,6 +222,9 @@ function ItemColorPicker() {
             backgroundColor: "#1952E294",
             borderWidth: 0,
             justifyContent: 'center',
+          }}
+          onPress={() => {
+            navigation.navigate('Item', {color: colorSrc});
           }}
         >
           <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#fff' }}>XONG</Text>

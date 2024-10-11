@@ -65,13 +65,12 @@ const ToDoListScreen = () => {
         </View>
     )
 
-    useEffect(() => {
-        fetchAllData()
-    }, [])
-
     useFocusEffect(() => {
-        fetchAllData()
+        React.useCallback(() => {
+            fetchAllData()
+        })
     })
+
 
     return (
         <SafeAreaView style={styles.container}>

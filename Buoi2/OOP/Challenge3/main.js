@@ -1,4 +1,4 @@
-function Car(make, speed, charge){
+function Car(make, speed){
     this.make = make;
     this.speed = speed;
 }
