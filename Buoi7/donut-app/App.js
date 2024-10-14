@@ -1,14 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, FlatList, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Detail } from './components/screens/Detail';
 
-const Home = () => {
+const Stack = createStackNavigator();
 
-}
-
-export default function App() {
+const Home = ({ navigation }) => {
   const [data, setData] = useState([]);
+  const [activeButton, setActiveButton] = useState("Donut");
+  const [filteredData, setFilteredData] = useState([]);
 
   const url = "https://66fc952fc3a184a84d17640f.mockapi.io/api/v1"
 
@@ -32,11 +36,14 @@ export default function App() {
             ${item.price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }).replace('$', '')}
           </Text>
         </View>
-        <Pressable style={{position: "absolute", bottom: "10px", right: "10px"}}>
+        <TouchableOpacity
+          style={{ position: "absolute", bottom: 10, right: 10 }}
+          onPress={() => navigation.navigate('Detail', { item })}
+        >
           <Image
             source={require('./assets/plus_button.png')}
           />
-        </Pressable>
+        </TouchableOpacity>
       </Pressable>
     )
   }
@@ -45,9 +52,28 @@ export default function App() {
     fetchAllData();
   })
 
+  const handlePress = (button) => {
+    setActiveButton(button);
+    switch (button) {
+      case "Pink Donut":
+        filtDonut('Pink Donut');
+        break;
+      case "Floating":
+        filtDonut('Floating');
+        break;
+      default:
+        break;
+    };
+  }
+
+  const filtDonut = (name) => {
+    const filteredDonut = data.filter(item => item.name === name);
+    setFilteredData(filteredDonut);
+  }
+
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={{ fontSize: 20 }}>Welcome, Jala!</Text>
       <Text style={{ fontSize: 24, fontWeight: "bold" }}>Choice your Best Food</Text>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
@@ -58,26 +84,46 @@ export default function App() {
           />
         </Pressable>
       </View>
-      <View>
+      <View style={{ flex: 1 }}>
         <View style={{ flexDirection: "row", gap: 20 }}>
-          <Pressable style={styles.collection}>
+          <TouchableOpacity
+            style={[styles.collection, { backgroundColor: activeButton === 'Donut' ? '#F1B000' : '#C4C4C41F' }]}
+            onPress={() => handlePress('Donut')}
+          >
             <Text>Donut</Text>
-          </Pressable>
-          <Pressable style={styles.collection}>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.collection, { backgroundColor: activeButton === 'Pink Donut' ? '#F1B000' : '#C4C4C41F' }]}
+            onPress={() => handlePress('Pink Donut')}
+          >
             <Text>Pink Donut</Text>
-          </Pressable>
-          <Pressable style={styles.collection}>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.collection, { backgroundColor: activeButton === 'Floating' ? '#F1B000' : '#C4C4C41F' }]}
+            onPress={() => handlePress('Floating')}
+          >
             <Text>Floating</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
         <FlatList
-          data={data}
+          data={activeButton === "Donut" ? data : filteredData}
           renderItem={renderItem}
           keyExtractor={item => item.id}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='Home'>
+        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+        <Stack.Screen name="Detail" component={Detail} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -94,6 +140,7 @@ const styles = StyleSheet.create({
     padding: 10,
     color: "gray",
     fontSize: 20,
+    width: "80%",
   },
   collection: {
     padding: 10,
